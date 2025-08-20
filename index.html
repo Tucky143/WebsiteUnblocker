@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Proxy</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+#___proxybar{position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#0f1115;color:#e8eaf0;border-bottom:1px solid #242834;font:14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
+#___proxybar .wrap{display:flex;gap:.5rem;align-items:center;padding:.5rem .75rem}
+#___proxybar input{flex:1;min-width:0;background:#151822;color:#e8eaf0;border:1px solid #2c3346;border-radius:6px;padding:.5rem .6rem;font-size:14px;outline:none}
+#___proxybar input::placeholder{color:#8a94ab}
+#___proxybar button{background:#2d6cdf;border:0;color:#fff;border-radius:6px;padding:.5rem .75rem;font-weight:600;cursor:pointer}
+#___proxybar .brand{font-weight:700;letter-spacing:.2px;color:#c7d2fe}
+.main{max-width:800px;margin:0 auto;padding:2rem .75rem;color:#cfd5e6}
+.card{background:#0b0d12;border:1px solid #23283b;border-radius:10px;padding:1rem;margin-top:1rem}
+h1{font-weight:800;font-size:1.8rem;margin:0.5rem 0 0.25rem}
+p{color:#9aa3b2}
+.spacer{height:64px}
+</style>
+</head>
+<body>
+  <div id="___proxybar">
+    <div class="wrap">
+      <div class="brand">Proxy</div>
+      <form id="___proxyform" style="display:flex;gap:.5rem;align-items:center;flex:1">
+        <input id="___proxyinput" type="url" placeholder="https://example.com" autofocus />
+        <button type="submit">Go</button>
+      </form>
+    </div>
+  </div>
+  <div id="___landing_spacer" class="spacer"></div>
+  <main class="main">
+    <div class="card">
+      <h1>Paste a URL above</h1>
+      <p>Example: https://example.com, https://developer.mozilla.org, https://news.ycombinator.com</p>
+      <p>This Safe Browser is for Using educational websites only!</p>
+    </div>
+  </main>
+  <script>
+(function(){
+  const origin="https://browserjunior.100064285.workers.dev";
+  function prox(u){
+    try{
+      if(/^data:|blob:|mailto:|about:|javascript:/i.test(u)) return u;
+      var a=new URL(/^https?:\/\//i.test(u)?u:"https://"+u.replace(/^\/*/, ""), location.href);
+      return origin + "/" + a.protocol.replace(":","") + "/" + a.host + a.pathname + a.search + a.hash;
+    }catch(e){return u}
+  }
+  const form = document.getElementById("___proxyform");
+  const input = document.getElementById("___proxyinput");
+  const bar = document.getElementById("___proxybar");
+  const spacer = document.getElementById("___landing_spacer");
+  function updateSpacer(){ spacer.style.height = bar.offsetHeight + "px"; }
+  updateSpacer();
+  window.addEventListener('resize', updateSpacer, { passive: true });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var u = input.value.trim();
+    if(!u) return;
+    if(!/^https?:\/\//i.test(u)) u = "https://" + u.replace(/^\/*/, "");
+    location.href = prox(u);
+  });
+})();</script>
+</body>
+</html>
